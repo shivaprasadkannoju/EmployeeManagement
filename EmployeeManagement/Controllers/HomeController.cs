@@ -92,7 +92,6 @@ namespace EmployeeManagement.Controllers
                 }
                 
                 _employeeRepository.Update(employee);
-                _employeeRepository.de
                 return RedirectToAction("index");
             }
 
