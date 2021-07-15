@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,10 +9,12 @@ namespace EmployeeManagement.Models
     public class SQLEmployeeRepository : IEmployeeRepository
     {
         private readonly AppDbContext context;
+        private readonly ILogger<SQLEmployeeRepository> logger;
 
-        public SQLEmployeeRepository(AppDbContext context)
+        public SQLEmployeeRepository(AppDbContext context, ILogger<SQLEmployeeRepository> logger)
         {
             this.context = context;
+            this.logger = logger;
         }
         public Employee Add(Employee employee)
         {
@@ -20,9 +23,9 @@ namespace EmployeeManagement.Models
             return employee;
         }
 
-        public Employee Delete(int id)
+        public Employee Delete(int Id)
         {
-           Employee employee = context.Employees.Find(id);
+           Employee employee = context.Employees.Find(Id);
             if (employee != null)
             {
                 context.Employees.Remove(employee);
@@ -39,7 +42,14 @@ namespace EmployeeManagement.Models
 
         public Employee GetEmployee(int Id)
         {
-             return context.Employees.Find(Id);
+            logger.LogTrace("Trace Log");
+            logger.LogDebug("Debug Log");
+            logger.LogInformation("Information Log");
+            logger.LogWarning("Warning Log");
+            logger.LogError("Error Log");
+            logger.LogCritical("Critical Log");
+
+            return context.Employees.Find(Id);
         }
 
         public Employee Update(Employee employeeChanges)

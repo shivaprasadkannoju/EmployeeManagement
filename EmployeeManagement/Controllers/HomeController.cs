@@ -1,7 +1,9 @@
 ﻿using EmployeeManagement.Models;
 using EmployeeManagement.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,29 +12,40 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Controllers
 {
-    
+    [Authorize]
     public class HomeController : Controller
 	{
 		private  readonly IEmployeeRepository _employeeRepository;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly ILogger logger;
 
         public HomeController(IEmployeeRepository employeeRepository,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            ILogger<HomeController> logger)
 		{
+            logger.LogTrace("Trace Log");
+            logger.LogDebug("Debug Log");
+            logger.LogInformation("Information Log");
+            logger.LogWarning("Warning Log");
+            logger.LogError("Error Log");
+            logger.LogCritical("Critical Log");
+
 			_employeeRepository = employeeRepository;
             this.hostingEnvironment = hostingEnvironment;
+            this.logger = logger;
         }
         
+        [AllowAnonymous]
         public ViewResult Index()
 		{
             var model =  _employeeRepository.GetAllEmployee();
             return View(model);
 		}
 
-      
+        [AllowAnonymous]
         public ViewResult Details(int? id)
 		{
-
+            //throw new Exception("Error in Details View");
             Employee employee = _employeeRepository.GetEmployee(id.Value);
             
             if(employee == null)
@@ -56,7 +69,8 @@ namespace EmployeeManagement.Controllers
             return View();
         }
 
-        [HttpGet]
+   
+      [HttpGet]
         public ViewResult Edit(int id)
         {
             Employee employee = _employeeRepository.GetEmployee(id);
@@ -80,16 +94,9 @@ namespace EmployeeManagement.Controllers
                 employee.Name = model.Name;
                 employee.Email = model.Email;
                 employee.Department = model.Department;
-                if(model.Photo != null)
-                {
-                    if (model.ExistingPhotoPath != null)
-                    {
-                        string filePath = Path.Combine(hostingEnvironment.WebRootPath,
-                            "images", model.ExistingPhotoPath);
-                        System.IO.File.Delete(filePath);
-                    }
-                    employee.PhotoPath = ProcessUploadFile(model);
-                }
+                employee.PhotoPath = model.ExistingPhotoPath;
+                
+                
                 
                 _employeeRepository.Update(employee);
                 return RedirectToAction("index");
@@ -98,6 +105,8 @@ namespace EmployeeManagement.Controllers
             return View();
         }
 
+     
+    
         private string ProcessUploadFile(EmployeeCreateViewModel model)
         {
             string uniqueFileName = null;
@@ -117,6 +126,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
+        
         public IActionResult Create(EmployeeCreateViewModel model)
         {
             if (ModelState.IsValid)
@@ -137,5 +147,43 @@ namespace EmployeeManagement.Controllers
 
             return View();
         }
+
+
+
+        [HttpGet]
+        public ViewResult Delete(int id)
+        {
+            Employee employee = _employeeRepository.GetEmployee(id);
+            EmployeeDeleteViewModel employeeDeleteViewModel = new EmployeeDeleteViewModel
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                Email = employee.Email,
+                Department = employee.Department
+
+            };
+            return View(employeeDeleteViewModel);
+
+        }
+        [HttpPost]
+        public IActionResult Delete(EmployeeDeleteViewModel model)
+        {
+            Employee employee = _employeeRepository.GetEmployee(model.Id);
+
+          
+                
+                employee.Name = model.Name;
+                employee.Email = model.Email;
+                employee.Department = model.Department;
+
+                _employeeRepository.Delete(model.Id);
+                return RedirectToAction("index");
+         
+
+         
+        }
+
+
     }
 }
+
