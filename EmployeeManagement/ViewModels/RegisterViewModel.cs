@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EmployeeManagement.Utilities;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,6 +13,7 @@ namespace EmployeeManagement.ViewModels
         [Required]
         [EmailAddress]
         [Remote(action:"IsEmailInUse", controller:"Account")]
+        [ValidEmailDomain(allowedDomain: "shivatech.com", ErrorMessage ="Email domain should be shivatech.com")]
         public string Email { get; set; }
 
         [Required]
@@ -23,6 +25,7 @@ namespace EmployeeManagement.ViewModels
             ErrorMessage ="Password and confirmation password doesnot match.")]
         public string ConfirmPassword { get; set; }
 
+        public string City { get; set; }
 
     }
 }

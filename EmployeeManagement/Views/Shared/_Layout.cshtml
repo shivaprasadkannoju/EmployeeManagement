@@ -1,5 +1,5 @@
 ﻿
-@inject SignInManager<IdentityUser> signInManger;
+@inject SignInManager<ApplicationUser> signInManager;
 
 
 <!DOCTYPE html>
@@ -17,24 +17,32 @@
         <script src="~/lib/jquery/jquery.js"></script>
         <script src="~/lib/jquery-validate/jquery.validate.js"></script>
         <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-        <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
-
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
-              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
-              asp-suppress-fallback-integrity="true" />
-        <script src="https://code.jquery.com/jquery-3.6.0.js"
-                integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+        @*<script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>*@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-      
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"
-                integrity="sha512-0QDLUJ0ILnknsQdYYjG7v2j8wERkKufvjBNmng/EdR/s/SE7X8cQ9y0+wMzuQT0lfXQ/NhG+zhmHNOWTUS3kMA==" 
-                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     </environment>
+	<environment exclude="Development">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+			  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
+			  asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+			  asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+			  asp-suppress-fallback-integrity="true" />
+		<script src="https://code.jquery.com/jquery-3.6.0.js"
+				integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" 
+				crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"
+				integrity="sha512-0QDLUJ0ILnknsQdYYjG7v2j8wERkKufvjBNmng/EdR/s/SE7X8cQ9y0+wMzuQT0lfXQ/NhG+zhmHNOWTUS3kMA=="
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"
+				integrity="sha512-o6XqxgrUsKmchwy9G5VRNWSSxTS4Urr4loO6/0hYdpWmFUfHqGzawGxeQGMDqYzxjY9sbktPbNlkIQJWagVZQg==" 
+				crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+				integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+				crossorigin="anonymous"></script>
+
+
+	</environment>
 
     <link href="~/css/site.css" rel="stylesheet" />
     <title>@ViewBag.Title</title>
@@ -57,10 +65,21 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="home" asp-action="create">Create</a>
                     </li>
+                   @* @if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))*@
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" type="button" href="#" id="navbarDropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" asp-controller="Administration" asp-action="ListUsers">Users</a>
+                                <a class="dropdown-item" asp-controller="Administration" asp-action="ListRoles">Roles</a>
+                            </div>
+                        </li>
+                    }
 
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    @if (signInManger.IsSignedIn(User))
+                    @if (signInManager.IsSignedIn(User))
                     {
                         <li class="nav-item">
                             <form method="post" asp-action="logout" asp-controller="account">

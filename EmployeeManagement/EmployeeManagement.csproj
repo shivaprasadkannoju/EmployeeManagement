@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <UserSecretsId>c14dd863-b903-4677-bc9a-642f81a9073b</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +11,8 @@
     <Compile Remove="Migrations\20210706221654_AddPhotoPathColumn.Designer.cs" />
     <Compile Remove="Migrations\20210706222346_AddPhotoPathColumn.cs" />
     <Compile Remove="Migrations\20210706222346_AddPhotoPathColumn.Designer.cs" />
+    <Compile Remove="Migrations\20210715164701_Extend_IdentityUser.cs" />
+    <Compile Remove="Migrations\20210715164701_Extend_IdentityUser.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
